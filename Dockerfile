@@ -16,16 +16,16 @@ apt install ghostscript -y && \
 apt install mysql-server -y && \
 apt install unzip -y && \
 cd /tmp/ && \
-wget https://download.documentfoundation.org/libreoffice/stable/6.1.2/deb/x86_64/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz && \
+wget http://mirror.switch.ch/ftp/mirror/tdf/libreoffice/stable/6.1.2/deb/x86/LibreOffice_6.1.2_Linux_x86_deb.tar.gz && \
 tar xvf /tmp/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz && \
 cd /tmp/LibreOffice_6.1.2.1_Linux_x86-64_deb/DEBS/ && \
 dpkg -i *.deb -y && \
 rm -rf /tmp/LibreOffice_6.1.2.1_Linux_x86-64_deb && \
-rm -f LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz
+rm -f /tmp/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz
 
 #Install java
 RUN \
-cd /tmp && \
+cd /tmp/ && \
 wget --quiet --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" ${JAVA_URL} && \
 tar xvf jdk* && \
 mv jdk* /usr/local && \
@@ -47,12 +47,7 @@ RUN \
 mysql -h localhost -u root -p"Webl0g1c" -e "CREATE DATABASE okmdb DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin" && \
 mysql -h localhost -u root -p"Webl0g1c" -e "CREATE USER openkm@localhost IDENTIFIED BY 'Medicare01'" && \
 mysql -h localhost -u root -p"Webl0g1c" -e "GRANT ALL ON okmdb.* TO openkm@localhost WITH GRANT OPTION" && \
-mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('808e7a42-2e73-470c-ba23-e4c9d5c3a0f4', 'Live Edit')" && \
-mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('58392af6-2131-413b-b188-1851aa7b651c', 'HTML Editor 4')" && \
-mysql -h localhost -D okmdb  -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '808e7a42-2e73-470c-ba23-e4c9d5c3a0f4')" && \
-mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '58392af6-2131-413b-b188-1851aa7b651c')"
-
-
+#
 # Install Tomcat bundle
 RUN \
 cd /home/openkm && \
@@ -74,8 +69,17 @@ chown -R openkm.openkm /home/openkm/
 
 
 COPY tomcat /etc/init.d/
+
 RUN \
 chmod u+x /etc/init.d/tomcat && \
+mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('808e7a42-2e73-470c-ba23-e4c9d5c3a0f4', 'Live Edit')" && \
+mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('58392af6-2131-413b-b188-1851aa7b651c', 'HTML Editor 4')" && \
+mysql -h localhost -D okmdb  -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '808e7a42-2e73-470c-ba23-e4c9d5c3a0f4')" && \
+mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '58392af6-2131-413b-b188-1851aa7b651c')" 
+
+ENTRYPOINT [ "/home/openkm/tomcat-8.5.24/bin/catalina.sh run" ]
+
+
 
 
 
