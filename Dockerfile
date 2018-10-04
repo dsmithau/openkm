@@ -16,10 +16,10 @@ apt install ghostscript -y && \
 apt install mysql-server -y && \
 apt install unzip -y && \
 cd /tmp/ && \
-wget http://mirror.switch.ch/ftp/mirror/tdf/libreoffice/stable/6.1.2/deb/x86/LibreOffice_6.1.2_Linux_x86_deb.tar.gz && \
+wget http://www.ftp.ne.jp/office/tdf/libreoffice/stable/6.1.2/deb/x86_64/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz &&\
 tar xvf /tmp/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz && \
 cd /tmp/LibreOffice_6.1.2.1_Linux_x86-64_deb/DEBS/ && \
-dpkg -i *.deb -y && \
+dpkg -i *.deb && \
 rm -rf /tmp/LibreOffice_6.1.2.1_Linux_x86-64_deb && \
 rm -f /tmp/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz
 
@@ -46,7 +46,7 @@ RUN \
 /etc/init.d/mysql start && \
 mysql -h localhost -u root -p"Webl0g1c" -e "CREATE DATABASE okmdb DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin" && \
 mysql -h localhost -u root -p"Webl0g1c" -e "CREATE USER openkm@localhost IDENTIFIED BY 'Medicare01'" && \
-mysql -h localhost -u root -p"Webl0g1c" -e "GRANT ALL ON okmdb.* TO openkm@localhost WITH GRANT OPTION" && \
+mysql -h localhost -u root -p"Webl0g1c" -e "GRANT ALL ON okmdb.* TO openkm@localhost WITH GRANT OPTION"
 #
 # Install Tomcat bundle
 RUN \
@@ -60,18 +60,18 @@ rm -f /home/openkm/OpenKM.war && \
 rm -f /home/openkm/tomcat-8.5.24/conf/server.xml && \
 rm -f /home/openkm/tomcat-8.5.24/OpenKM.cfg
 
-COPY \
-server.xml /home/openkm/tomcat-8.5.24/conf/ && \
-OpenKM.cfg /home/openkm/tomcat-8.5.24/
-
 RUN \
 chown -R openkm.openkm /home/openkm/
 
-
 COPY tomcat /etc/init.d/
 
-RUN \
+COPY server.xml /home/openkm/tomcat-8.5.24/conf/ 
+COPY OpenKM.cfg /home/openkm/tomcat-8.5.24/
+
+RUN /etc/init.d/mysql start && \
 chmod u+x /etc/init.d/tomcat && \
+/etc/init.d/tomcat start && \
+sleep 20 && \
 mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('808e7a42-2e73-470c-ba23-e4c9d5c3a0f4', 'Live Edit')" && \
 mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('58392af6-2131-413b-b188-1851aa7b651c', 'HTML Editor 4')" && \
 mysql -h localhost -D okmdb  -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '808e7a42-2e73-470c-ba23-e4c9d5c3a0f4')" && \
