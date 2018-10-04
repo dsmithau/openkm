@@ -69,6 +69,8 @@ COPY OpenKM.cfg /home/openkm/tomcat-8.5.24/
 RUN \
 chown -R openkm.openkm /home/openkm/
 
+COPY start.sh /
+
 ENTRYPOINT [ "/start.sh" ]
 
 
