@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Mount the repository and indexing areas
+mount ${REPOS_SERVER}:${EXPORT_PATH} /mnt/openkm
+
+
+
+
 /etc/init.d/mysql start
 
 chmod u+x /etc/init.d/tomcat

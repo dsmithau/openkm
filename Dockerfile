@@ -15,6 +15,9 @@ apt install imagemagick -y && \
 apt install ghostscript -y && \
 apt install mysql-server -y && \
 apt install unzip -y && \
+apt install libdbus-glib-1-2 -y && \
+apt install libsm6 -y && \
+
 cd /tmp/ && \
 wget http://www.ftp.ne.jp/office/tdf/libreoffice/stable/6.1.2/deb/x86_64/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz &&\
 tar xvf /tmp/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz && \
@@ -69,9 +72,14 @@ COPY OpenKM.cfg /home/openkm/tomcat-8.5.24/
 RUN \
 chown -R openkm.openkm /home/openkm/
 
+RUN \
+mkdir -p /mnt/OpenKM
+
 COPY start.sh /
 
 RUN chmod u+x /start.sh
+
+EXPOSE 8080
 
 ENTRYPOINT [ "/start.sh" ]
 
