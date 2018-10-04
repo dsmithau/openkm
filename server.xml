@@ -67,7 +67,7 @@
     <Resource name="jdbc/OpenKMDS" auth="Container" type="javax.sql.DataSource"
             maxTotal="100" maxIdle="30" maxWaitMillis="10000" validationQuery="select 1"
             username="openkm" password="Medicare01" driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://localhost:3306/okmdb?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8"/>
+            url="jdbc:mysql://localhost:3306/okmdb?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;useSSL=false"/>
 
   <!-->  <Resource name="jdbc/OpenKMDS" auth="Container" type="javax.sql.DataSource"
           maxTotal="100" maxIdle="30" maxWaitMillis="10000" validationQuery="select 1"

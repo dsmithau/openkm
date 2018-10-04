@@ -52,32 +52,24 @@ mysql -h localhost -u root -p"Webl0g1c" -e "GRANT ALL ON okmdb.* TO openkm@local
 RUN \
 cd /home/openkm && \
 wget -O Tomcat-8.5.24.zip https://sourceforge.net/projects/openkm/files/common/Tomcat-8.5.24.zip/download && \
-wget -O OpenKM.war https://sourceforge.net/projects/openkm/files/6.3.6/OpenKM-6.3.6.zip/download && \
+wget -O OpenKM.war.zip https://sourceforge.net/projects/openkm/files/6.3.6/OpenKM-6.3.6.zip/download && \
 unzip Tomcat-8.5.24.zip && \
+unzip OpenKM.war.zip && \
 rm -f /home/openkm/Tomcat-8.5.24.zip && \
 cp /home/openkm/OpenKM.war /home/openkm/tomcat-8.5.24/webapps/ && \
 rm -f /home/openkm/OpenKM.war && \
 rm -f /home/openkm/tomcat-8.5.24/conf/server.xml && \
 rm -f /home/openkm/tomcat-8.5.24/OpenKM.cfg
 
-RUN \
-chown -R openkm.openkm /home/openkm/
-
 COPY tomcat /etc/init.d/
 
 COPY server.xml /home/openkm/tomcat-8.5.24/conf/ 
 COPY OpenKM.cfg /home/openkm/tomcat-8.5.24/
 
-RUN /etc/init.d/mysql start && \
-chmod u+x /etc/init.d/tomcat && \
-/etc/init.d/tomcat start && \
-sleep 20 && \
-mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('808e7a42-2e73-470c-ba23-e4c9d5c3a0f4', 'Live Edit')" && \
-mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_EXTENSION (EXT_UUID, EXT_NAME) VALUES ('58392af6-2131-413b-b188-1851aa7b651c', 'HTML Editor 4')" && \
-mysql -h localhost -D okmdb  -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '808e7a42-2e73-470c-ba23-e4c9d5c3a0f4')" && \
-mysql -h localhost -D okmdb -u openkm -p"Medicare01" -e "INSERT INTO OKM_PROFILE_MSC_EXTENSION (PEX_ID, PEX_EXTENSION) VALUES (1, '58392af6-2131-413b-b188-1851aa7b651c')" 
+RUN \
+chown -R openkm.openkm /home/openkm/
 
-ENTRYPOINT [ "/home/openkm/tomcat-8.5.24/bin/catalina.sh run" ]
+ENTRYPOINT [ "/start.sh" ]
 
 
 
