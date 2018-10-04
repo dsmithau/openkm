@@ -71,6 +71,8 @@ chown -R openkm.openkm /home/openkm/
 
 COPY start.sh /
 
+RUN chmod u+x /start.sh
+
 ENTRYPOINT [ "/start.sh" ]
 
 
