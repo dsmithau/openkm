@@ -6,15 +6,25 @@ USERNAME=dsmithau
 
 IMAGE=openkm
 
-version=`cat VERSION`
+currentversion=`cat VERSION`
 
-echo "version: $version"
+MINOR=`echo ${currentversion} | awk -F "." '{print $2}'`
 
+NEW_MINOR=$((${MINOR}+1))
+
+NEWVERSION=0.${NEW_MINOR}
+
+echo ${NEWVERSION} > VERSION
+
+echo "Previous build version: ${currentversion}"
+echo "Current build version: ${NEWVERSION}"
+
+sleep 2
 
 docker build -t $USERNAME/$IMAGE:latest . 
 
 
-docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:$version
+docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:${NEWVERSION}
 
 # docker push $USERNAME/$IMAGE:latest
 # docker push $USERNAME/$IMAGE:$version

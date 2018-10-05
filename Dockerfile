@@ -17,7 +17,7 @@ apt install mysql-server -y && \
 apt install unzip -y && \
 apt install libdbus-glib-1-2 -y && \
 apt install libsm6 -y && \
-
+apt install nfs-kernel-server -y && \
 cd /tmp/ && \
 wget http://www.ftp.ne.jp/office/tdf/libreoffice/stable/6.1.2/deb/x86_64/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz &&\
 tar xvf /tmp/LibreOffice_6.1.2_Linux_x86-64_deb.tar.gz && \
@@ -73,13 +73,20 @@ RUN \
 chown -R openkm.openkm /home/openkm/
 
 RUN \
-mkdir -p /mnt/OpenKM
+mkdir -p /mnt/openkm &&\
+mount -a
 
 COPY start.sh /
 
 RUN chmod u+x /start.sh
 
-EXPOSE 8080
+EXPOSE 8080/tcp
+EXPOSE 8080/udp
+EXPOSE 111/tcp
+EXPOSE 111/udp
+EXPOSE 2049/tcp
+EXPOSE 2049/udp
+
 
 ENTRYPOINT [ "/start.sh" ]
 
