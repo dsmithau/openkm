@@ -76,6 +76,8 @@ RUN \
 mkdir -p /mnt/openkm &&\
 mount -a
 
+COPY policy.xml /etc/ImageMagick-6/
+
 COPY start.sh /
 
 RUN chmod u+x /start.sh
