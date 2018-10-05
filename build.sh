@@ -10,7 +10,7 @@ currentversion=`cat VERSION`
 
 MINOR=`echo ${currentversion} | awk -F "." '{print $2}'`
 
-NEW_MINOR=$((${MINOR}+1))
+NEW_MINOR=$(( ${MINOR}+1 ))
 
 NEWVERSION=0.${NEW_MINOR}
 
